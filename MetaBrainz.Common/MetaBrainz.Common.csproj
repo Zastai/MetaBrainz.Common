@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="MetaBrainz.Build.Sdk">
+
+  <PropertyGroup>
+    <Title>Common Utilities</Title>
+    <Description>This package provides general utility classes used by other MetaBrainz packages.</Description>
+    <PackageCopyrightYears>2022</PackageCopyrightYears>
+    <PackageRepositoryName>MetaBrainz.Common</PackageRepositoryName>
+    <PackageTags>MetaBrainz</PackageTags>
+    <Version>1.0.0-pre</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" IncludeAssets="compile" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

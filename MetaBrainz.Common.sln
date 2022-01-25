@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Support Files", "Support Files", "{96AE5FBC-DDA2-423D-8A21-FDC6A97015D4}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		appveyor.yml = appveyor.yml
+		build-package.ps1 = build-package.ps1
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{1E672E6E-D5B9-4F11-B339-39617738DC37}"
+	ProjectSection(SolutionItems) = preProject
+		.github\dependabot.yml = .github\dependabot.yml
+		.github\github-labels.yml = .github\github-labels.yml
+		.github\release-drafter.yml = .github\release-drafter.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{23BF0B90-7393-4926-B495-32AAB375102C}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\release-drafter.yml = .github\workflows\release-drafter.yml
+		.github\workflows\update-labels.yml = .github\workflows\update-labels.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaBrainz.Common", "MetaBrainz.Common\MetaBrainz.Common.csproj", "{E41E293F-652B-4BEF-BC74-7ADFBDB95EAB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1E672E6E-D5B9-4F11-B339-39617738DC37} = {96AE5FBC-DDA2-423D-8A21-FDC6A97015D4}
+		{23BF0B90-7393-4926-B495-32AAB375102C} = {1E672E6E-D5B9-4F11-B339-39617738DC37}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {04E7B043-79FE-461A-802D-50BB74AB7080}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E41E293F-652B-4BEF-BC74-7ADFBDB95EAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E41E293F-652B-4BEF-BC74-7ADFBDB95EAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E41E293F-652B-4BEF-BC74-7ADFBDB95EAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E41E293F-652B-4BEF-BC74-7ADFBDB95EAB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
