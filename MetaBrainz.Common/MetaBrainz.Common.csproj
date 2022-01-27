@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" IncludeAssets="compile" PrivateAssets="all" />
+    <PackageReference Include="System.Net.Http" />
   </ItemGroup>
 
 </Project>
