@@ -27,12 +27,38 @@ public static class HttpUtils {
     return new ProductInfoHeaderValue(an.Name ?? HttpUtils.UnknownAssemblyName, an.Version?.ToString());
   }
 
+  /// <summary>Checks a response to ensure it was successful.</summary>
+  /// <param name="response">The response whose status should be checked.</param>
+  /// <returns><paramref name="response"/>.</returns>
+  /// <exception cref="HttpError">When the response did not have a successful status.</exception>
+  public static HttpResponseMessage EnsureSuccessful(this HttpResponseMessage response)
+    => AsyncUtils.ResultOf(response.EnsureSuccessfulAsync());
+
+  /// <summary>Checks a response to ensure it was successful.</summary>
+  /// <param name="response">The response whose status should be checked.</param>
+  /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+  /// <returns><paramref name="response"/>.</returns>
+  /// <exception cref="HttpError">When the response did not have a successful status.</exception>
+  public static async ValueTask<HttpResponseMessage> EnsureSuccessfulAsync(this HttpResponseMessage response,
+                                                                           CancellationToken cancellationToken = new()) {
+    if (response.IsSuccessStatusCode) {
+      return response;
+    }
+#if DEBUG
+    // This also prints the contents.
+    await response.GetStringContentAsync(cancellationToken);
+#else
+    await ValueTask.CompletedTask;
+#endif
+    throw new HttpError(response);
+  }
+
   /// <summary>Gets the content encoding based on content headers.</summary>
   /// <param name="contentHeaders">The headers to get the information from.</param>
   /// <returns>
   /// The content encoding extracted from the headers, or "utf-8" as fallback if no explicit specification was found.
   /// </returns>
-  public static string GetContentEncoding(HttpContentHeaders contentHeaders) {
+  public static string GetContentEncoding(this HttpContentHeaders contentHeaders) {
     var characterSet = contentHeaders.ContentEncoding.FirstOrDefault();
     if (string.IsNullOrWhiteSpace(characterSet)) {
       // Fall back on the charset portion of the content type.
@@ -48,20 +74,20 @@ public static class HttpUtils {
   /// <summary>Gets the content of an HTTP response as a string.</summary>
   /// <param name="response">The response to process.</param>
   /// <returns>The content of <paramref name="response"/> as a string.</returns>
-  public static string GetStringContent(HttpResponseMessage response)
-    => AsyncUtils.ResultOf(HttpUtils.GetStringContentAsync(response));
+  public static string GetStringContent(this HttpResponseMessage response)
+    => AsyncUtils.ResultOf(response.GetStringContentAsync());
 
   /// <summary>Gets the content of an HTTP response as a string.</summary>
   /// <param name="response">The response to process.</param>
   /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
   /// <returns>The content of <paramref name="response"/> as a string.</returns>
-  public static async Task<string> GetStringContentAsync(HttpResponseMessage response,
+  public static async Task<string> GetStringContentAsync(this HttpResponseMessage response,
                                                          CancellationToken cancellationToken = new()) {
     var content = response.Content;
     Debug.Print($"[{DateTime.UtcNow}] => RESPONSE ({content.Headers.ContentType}): {content.Headers.ContentLength} bytes");
     var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
     await using var _ = stream.ConfigureAwait(false);
-    var characterSet = HttpUtils.GetContentEncoding(content.Headers);
+    var characterSet = content.Headers.GetContentEncoding();
     using var sr = new StreamReader(stream, Encoding.GetEncoding(characterSet), false, 1024, true);
 #if NET6_0
     var text = await sr.ReadToEndAsync().ConfigureAwait(false);
