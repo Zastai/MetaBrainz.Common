@@ -59,24 +59,15 @@ public static class HttpUtils {
                                                          CancellationToken cancellationToken = new()) {
     var content = response.Content;
     Debug.Print($"[{DateTime.UtcNow}] => RESPONSE ({content.Headers.ContentType}): {content.Headers.ContentLength} bytes");
-#if NET
     var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
     await using var _ = stream.ConfigureAwait(false);
-#elif NETSTANDARD2_1_OR_GREATER
-    var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-    await using var _ = stream.ConfigureAwait(false);
-#else
-    using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-#endif
-#if !NET
-    if (stream is null) {
-      return "";
-    }
-#endif
     var characterSet = HttpUtils.GetContentEncoding(content.Headers);
     using var sr = new StreamReader(stream, Encoding.GetEncoding(characterSet), false, 1024, true);
-    // This is not (yet?) cancelable
+#if NET6_0
     var text = await sr.ReadToEndAsync().ConfigureAwait(false);
+#else
+    var text = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+#endif
     Debug.Print($"[{DateTime.UtcNow}] => RESPONSE TEXT: {TextUtils.FormatMultiLine(text)}");
     return text;
   }
