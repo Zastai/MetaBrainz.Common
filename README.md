@@ -1,3 +1,9 @@
-# MetaBrainz.Common [![Build Status](https://img.shields.io/appveyor/build/zastai/metabrainz-common)](https://ci.appveyor.com/project/Zastai/metabrainz-common) [![NuGet Version](https://img.shields.io/nuget/v/MetaBrainz.Common)](https://www.nuget.org/packages/MetaBrainz.Common)
+# MetaBrainz.Common [![Build Status][CI-S]][CI-L] [![NuGet Package Version][NuGet-S]][NuGet-L]
 
 General helper classes, for use by the other `MetaBrainz.*` packages.
+
+[CI-S]: https://github.com/Zastai/MetaBrainz.Common/actions/workflows/build.yml/badge.svg
+[CI-L]: https://github.com/Zastai/MetaBrainz.Common/actions/workflows/build.yml
+
+[NuGet-S]: https://img.shields.io/nuget/v/MetaBrainz.Common
+[NuGet-L]: https://www.nuget.org/packages/MetaBrainz.Common

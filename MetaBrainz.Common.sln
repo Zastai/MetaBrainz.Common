@@ -6,7 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Support Files", "Support Files", "{96AE5FBC-DDA2-423D-8A21-FDC6A97015D4}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		appveyor.yml = appveyor.yml
 		build-package.ps1 = build-package.ps1
 		Directory.Packages.props = Directory.Packages.props
 		LICENSE.md = LICENSE.md
@@ -22,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{1E672E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{23BF0B90-7393-4926-B495-32AAB375102C}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\workflows\release-drafter.yml = .github\workflows\release-drafter.yml
 		.github\workflows\update-labels.yml = .github\workflows\update-labels.yml
 	EndProjectSection
