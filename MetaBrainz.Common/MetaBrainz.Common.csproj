@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="MetaBrainz.Build.Sdk">
+<Project Sdk="MetaBrainz.Build.Sdk/3.0.0">
 
   <PropertyGroup>
+    <Authors>Zastai</Authors>
     <Title>Common Utilities</Title>
     <Description>This package provides general utility classes used by other MetaBrainz packages.</Description>
-    <PackageCopyrightYears>2022</PackageCopyrightYears>
+    <PackageCopyrightOwners>Tim Van Holder</PackageCopyrightOwners>
+    <PackageCopyrightYears>2022, 2023</PackageCopyrightYears>
     <PackageRepositoryName>MetaBrainz.Common</PackageRepositoryName>
     <PackageTags>MetaBrainz</PackageTags>
-    <Version>1.0.1-pre</Version>
+    <Version>2.0.0-pre</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" IncludeAssets="compile" PrivateAssets="all" />
-    <PackageReference Include="System.Memory" />
-    <PackageReference Include="System.Net.Http" />
   </ItemGroup>
 
 </Project>

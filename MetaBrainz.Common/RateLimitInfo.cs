@@ -71,7 +71,7 @@ public readonly struct RateLimitInfo {
     if (text is null) {
       return null;
     }
-    return long.TryParse(text, out var value) ? UnixTime.Convert(value) : null;
+    return long.TryParse(text, out var value) ? DateTimeOffset.FromUnixTimeSeconds(value) : null;
   }
 
 }
