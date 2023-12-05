@@ -12,13 +12,8 @@ public static class TextUtils {
   /// <summary>Decodes all the bytes in the specified span as a string, using the UTF-8 character set.</summary>
   /// <param name="bytes">A read-only byte span to decode to a Unicode string.</param>
   /// <returns>A string that contains the decoded bytes from the provided read-only span.</returns>
-  public static string DecodeUtf8(ReadOnlySpan<byte> bytes) {
-#if NETFRAMEWORK || NETSTANDARD2_0 // No Span-based API
-    return Encoding.UTF8.GetString(bytes.ToArray());
-#else
-    return Encoding.UTF8.GetString(bytes);
-#endif
-  }
+  [Obsolete("Call Encoding.UTF8.GetString() instead.")]
+  public static string DecodeUtf8(ReadOnlySpan<byte> bytes) => Encoding.UTF8.GetString(bytes);
 
   /// <summary>Formats a string, including extra handling if it's multiline.</summary>
   /// <param name="text">The string to format. Trailing line breaks are discarded.</param>
