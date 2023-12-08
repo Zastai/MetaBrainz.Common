@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="MetaBrainz.Build.Sdk/3.0.0">
+<Project>
+
+  <Sdk Name="MetaBrainz.Build.Sdk" Version="3.1.0" />
 
   <PropertyGroup>
     <Authors>Zastai</Authors>
@@ -10,6 +12,10 @@
     <PackageRepositoryName>MetaBrainz.Common</PackageRepositoryName>
     <PackageTags>MetaBrainz</PackageTags>
     <Version>2.0.0-pre</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyIsComVisible>false</AssemblyIsComVisible>
   </PropertyGroup>
 
   <ItemGroup>
