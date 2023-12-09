@@ -11,7 +11,7 @@
     <PackageCopyrightYears>2022, 2023</PackageCopyrightYears>
     <PackageRepositoryName>MetaBrainz.Common</PackageRepositoryName>
     <PackageTags>MetaBrainz</PackageTags>
-    <Version>2.0.0-pre</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup>
