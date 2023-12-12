@@ -30,6 +30,14 @@ public static class AsyncUtils {
 ```cs
 public class HttpError : System.Exception {
 
+  string? Content {
+    public get;
+  }
+
+  System.Net.Http.Headers.HttpContentHeaders? ContentHeaders {
+    public get;
+  }
+
   string Message {
     public override get;
   }
@@ -38,13 +46,28 @@ public class HttpError : System.Exception {
     public get;
   }
 
+  System.Net.Http.Headers.HttpResponseHeaders? ResponseHeaders {
+    public get;
+  }
+
   System.Net.HttpStatusCode Status {
     public get;
   }
 
+  System.Version? Version {
+    public get;
+  }
+
+  [System.ObsoleteAttribute("Use FromResponse or FromResponseAsync instead.")]
   public HttpError(System.Net.Http.HttpResponseMessage response);
 
   public HttpError(System.Net.HttpStatusCode status, string? reason, System.Exception? cause = null);
+
+  public HttpError(System.Net.HttpStatusCode status, string? reason, System.Version version, System.Exception? cause = null);
+
+  public static HttpError FromResponse(System.Net.Http.HttpResponseMessage response);
+
+  public static System.Threading.Tasks.Task<HttpError> FromResponseAsync(System.Net.Http.HttpResponseMessage response, System.Threading.CancellationToken cancellationToken = default);
 
 }
 ```

@@ -46,13 +46,7 @@ public static class HttpUtils {
     if (response.IsSuccessStatusCode) {
       return response;
     }
-#if DEBUG
-    // This also prints the contents.
-    await response.GetStringContentAsync(cancellationToken);
-#else
-    await ValueTask.CompletedTask;
-#endif
-    throw new HttpError(response);
+    throw await HttpError.FromResponseAsync(response, cancellationToken);
   }
 
   /// <summary>Gets the content encoding based on content headers.</summary>
