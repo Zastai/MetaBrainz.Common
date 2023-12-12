@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define TRACE
+
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -44,13 +46,7 @@ public static class HttpUtils {
     if (response.IsSuccessStatusCode) {
       return response;
     }
-#if DEBUG
-    // This also prints the contents.
-    await response.GetStringContentAsync(cancellationToken);
-#else
-    await ValueTask.CompletedTask;
-#endif
-    throw new HttpError(response);
+    throw await HttpError.FromResponseAsync(response, cancellationToken);
   }
 
   /// <summary>Gets the content encoding based on content headers.</summary>
@@ -83,20 +79,27 @@ public static class HttpUtils {
   /// <returns>The content of <paramref name="response"/> as a string.</returns>
   public static async Task<string> GetStringContentAsync(this HttpResponseMessage response,
                                                          CancellationToken cancellationToken = new()) {
-    var content = response.Content;
-    Debug.Print($"[{DateTime.UtcNow}] => RESPONSE ({content.Headers.ContentType}): {content.Headers.ContentLength} bytes");
+    var headers = response.Content.Headers;
+    HttpUtils.TraceSource.TraceInformation("RESPONSE ({0}): {1} bytes", headers.ContentType, headers.ContentLength);
     var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
     await using var _ = stream.ConfigureAwait(false);
-    var characterSet = content.Headers.GetContentEncoding();
+    var characterSet = headers.GetContentEncoding();
     using var sr = new StreamReader(stream, Encoding.GetEncoding(characterSet), false, 1024, true);
 #if NET6_0
     var text = await sr.ReadToEndAsync().ConfigureAwait(false);
 #else
     var text = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
 #endif
-    Debug.Print($"[{DateTime.UtcNow}] => RESPONSE TEXT: {TextUtils.FormatMultiLine(text)}");
+    if (HttpUtils.TraceSource.Switch.ShouldTrace(TraceEventType.Information)) {
+      HttpUtils.TraceSource.TraceInformation("RESPONSE TEXT: {0}", TextUtils.FormatMultiLine(text));
+    }
     return text;
   }
+
+  /// <summary>The trace source (named 'MetaBrainz.Common.HttpUtils', with a switch of the same name) used by this class.</summary>
+  public static readonly TraceSource TraceSource = new("MetaBrainz.Common.HttpUtils") {
+    Switch = new SourceSwitch("MetaBrainz.Common.HttpUtils", "Off")
+  };
 
   /// <summary>The name used by <see cref="CreateUserAgentHeader{T}"/> when no assembly name is available.</summary>
   public const string UnknownAssemblyName = "*Unknown Assembly*";
