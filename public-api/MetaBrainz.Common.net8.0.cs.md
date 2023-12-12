@@ -54,6 +54,8 @@ public class HttpError : System.Exception {
 ```cs
 public static class HttpUtils {
 
+  public static readonly System.Diagnostics.TraceSource TraceSource;
+
   public const string UnknownAssemblyName = "*Unknown Assembly*";
 
   public static System.Net.Http.Headers.ProductInfoHeaderValue CreateUserAgentHeader<T>();
