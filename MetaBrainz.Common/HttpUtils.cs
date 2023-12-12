@@ -52,7 +52,9 @@ public static class HttpUtils {
   /// <summary>Gets the content encoding based on content headers.</summary>
   /// <param name="contentHeaders">The headers to get the information from.</param>
   /// <returns>
-  /// The content encoding extracted from the headers, or "utf-8" as fallback if no explicit specification was found.
+  /// The content encoding extracted from the headers (first from the <c>Content-Encoding</c> header, then from a <c>charset</c>
+  /// specification as part of the <c>Content-Type</c> header), mapped to lower case; uses "utf-8" as fallback if no explicit
+  /// specification was found.
   /// </returns>
   public static string GetContentEncoding(this HttpContentHeaders contentHeaders) {
     var characterSet = contentHeaders.ContentEncoding.FirstOrDefault();
