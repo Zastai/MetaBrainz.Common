@@ -81,27 +81,26 @@ public static class HttpUtils {
   /// <returns>The content of <paramref name="response"/> as a string.</returns>
   public static async Task<string> GetStringContentAsync(this HttpResponseMessage response,
                                                          CancellationToken cancellationToken = new()) {
-    var headers = response.Content.Headers;
-    HttpUtils.TraceSource.TraceInformation("RESPONSE ({0}): {1} bytes", headers.ContentType, headers.ContentLength);
-    var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+    var content = response.Content;
+    var headers = content.Headers;
+    HttpUtils.TraceSource.TraceEvent(TraceEventType.Verbose, 1, "RESPONSE ({0}): {1} bytes", headers.ContentType,
+                                     headers.ContentLength);
+    var stream = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
     await using var _ = stream.ConfigureAwait(false);
-    var characterSet = headers.GetContentEncoding();
-    using var sr = new StreamReader(stream, Encoding.GetEncoding(characterSet), false, 1024, true);
+    using var sr = new StreamReader(stream, Encoding.GetEncoding(headers.GetContentEncoding()), false, 1024, true);
 #if NET6_0
     var text = await sr.ReadToEndAsync().ConfigureAwait(false);
 #else
     var text = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
 #endif
-    if (HttpUtils.TraceSource.Switch.ShouldTrace(TraceEventType.Information)) {
-      HttpUtils.TraceSource.TraceInformation("RESPONSE TEXT: {0}", TextUtils.FormatMultiLine(text));
+    if (HttpUtils.TraceSource.Switch.ShouldTrace(TraceEventType.Verbose)) {
+      HttpUtils.TraceSource.TraceEvent(TraceEventType.Verbose, 2, "RESPONSE TEXT: {0}", TextUtils.FormatMultiLine(text));
     }
     return text;
   }
 
-  /// <summary>The trace source (named 'MetaBrainz.Common.HttpUtils', with a switch of the same name) used by this class.</summary>
-  public static readonly TraceSource TraceSource = new("MetaBrainz.Common.HttpUtils") {
-    Switch = new SourceSwitch("MetaBrainz.Common.HttpUtils", "Off")
-  };
+  /// <summary>The trace source (named 'MetaBrainz.Common.HttpUtils') used by this class.</summary>
+  public static readonly TraceSource TraceSource = new("MetaBrainz.Common.HttpUtils", SourceLevels.Off);
 
   /// <summary>The name used by <see cref="CreateUserAgentHeader{T}"/> when no assembly name is available.</summary>
   public const string UnknownAssemblyName = "*Unknown Assembly*";
