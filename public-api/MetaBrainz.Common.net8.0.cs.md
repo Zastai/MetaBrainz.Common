@@ -46,6 +46,14 @@ public class HttpError : System.Exception {
     public get;
   }
 
+  System.Net.Http.Headers.HttpRequestHeaders? RequestHeaders {
+    public get;
+  }
+
+  System.Uri? RequestUri {
+    public get;
+  }
+
   System.Net.Http.Headers.HttpResponseHeaders? ResponseHeaders {
     public get;
   }

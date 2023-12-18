@@ -39,10 +39,10 @@ public class HttpError : Exception {
     this.Version = version;
   }
 
-  /// <summary>The content (assumed to be text) of the response that triggered the error, if available.</summary>
+  /// <summary>The content (assumed to be text) of the error response, if available.</summary>
   public string? Content { get; private init; }
 
-  /// <summary>The content headers of the response that triggered the error, if available.</summary>
+  /// <summary>The content headers of the error response, if available.</summary>
   public HttpContentHeaders? ContentHeaders { get; private init; }
 
   /// <summary>Gets a textual representation of the HTTP error.</summary>
@@ -65,17 +65,23 @@ public class HttpError : Exception {
   /// <summary>The reason phrase associated with the error.</summary>
   public string? Reason { get; }
 
-  /// <summary>The headers of the response that triggered the error, if available.</summary>
+  /// <summary>The headers of the request that provoked the error response, if available.</summary>
+  public HttpRequestHeaders? RequestHeaders { get; private init; }
+
+  /// <summary>The URI for the request that provoked the error response, if available.</summary>
+  public Uri? RequestUri { get; private init; }
+
+  /// <summary>The headers of the error response, if available.</summary>
   public HttpResponseHeaders? ResponseHeaders { get; private init; }
 
   /// <summary>The status code for the error.</summary>
   public HttpStatusCode Status { get; }
 
-  /// <summary>The HTTP message version from the response that triggered the error, if available.</summary>
+  /// <summary>The HTTP message version from the error response, if available.</summary>
   public Version? Version { get; private init; }
 
   /// <summary>Creates a new HTTP error based on an response message.</summary>
-  /// <param name="response">The response message that triggered the error.</param>
+  /// <param name="response">The response.</param>
   /// <returns>A new HTTP error containing information taken from the response message.</returns>
   public static HttpError FromResponse(HttpResponseMessage response) => AsyncUtils.ResultOf(HttpError.FromResponseAsync(response));
 
@@ -88,6 +94,8 @@ public class HttpError : Exception {
     return new HttpError(response.StatusCode, response.ReasonPhrase) {
       Content = await response.GetStringContentAsync(cancellationToken),
       ContentHeaders = HttpUtils.Copy(response.Content.Headers),
+      RequestHeaders = HttpUtils.Copy(response.RequestMessage?.Headers),
+      RequestUri = response.RequestMessage?.RequestUri,
       ResponseHeaders = HttpUtils.Copy(response.Headers),
       Version = response.Version,
     };
