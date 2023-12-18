@@ -15,25 +15,16 @@ namespace MetaBrainz.Common;
 public class HttpError : Exception {
 
   /// <summary>Creates a new HTTP error.</summary>
-  /// <param name="response">The response to take the status code and reason from.</param>
-  [Obsolete($"Use {nameof(HttpError.FromResponse)} or {nameof(HttpError.FromResponseAsync)} instead.")]
-  public HttpError(HttpResponseMessage response) : this(response.StatusCode, response.ReasonPhrase, response.Version) { }
-
-  /// <summary>Creates a new HTTP error.</summary>
-  /// <param name="status">The status code for the error.</param>
-  /// <param name="reason">The reason phrase associated with the error.</param>
-  /// <param name="cause">The exception that caused this one, if any.</param>
-  public HttpError(HttpStatusCode status, string? reason, Exception? cause = null) : base(null, cause) {
-    this.Reason = reason;
-    this.Status = status;
-  }
-
-  /// <summary>Creates a new HTTP error.</summary>
   /// <param name="status">The status code for the error.</param>
   /// <param name="reason">The reason phrase associated with the error.</param>
   /// <param name="version">The HTTP message version.</param>
+  /// <param name="message">
+  /// The message to use; if this is not specified or <see langword="null"/>, a message will be constructed based on
+  /// <paramref name="status"/>, <paramref name="reason"/> and <paramref name="version"/>.
+  /// </param>
   /// <param name="cause">The exception that caused this one, if any.</param>
-  public HttpError(HttpStatusCode status, string? reason, Version version, Exception? cause = null) : base(null, cause) {
+  public HttpError(HttpStatusCode status, string? reason = null, Version? version = null, string? message = null,
+                   Exception? cause = null) : base(HttpError.MessageFor(status, reason, version, message), cause) {
     this.Reason = reason;
     this.Status = status;
     this.Version = version;
@@ -44,23 +35,6 @@ public class HttpError : Exception {
 
   /// <summary>The content headers of the error response, if available.</summary>
   public HttpContentHeaders? ContentHeaders { get; private init; }
-
-  /// <summary>Gets a textual representation of the HTTP error.</summary>
-  /// <returns>A textual representation of the HTTP error.</returns>
-  public override string Message {
-    get {
-      var sb = new StringBuilder();
-      sb.Append("HTTP");
-      if (this.Version is not null) {
-        sb.Append('/').Append(this.Version);
-      }
-      sb.Append(' ').Append((int) this.Status).Append(" (").Append(this.Status).Append(')');
-      if (this.Reason is not null) {
-        sb.Append(" '").Append(this.Reason).Append('\'');
-      }
-      return sb.ToString();
-    }
-  }
 
   /// <summary>The reason phrase associated with the error.</summary>
   public string? Reason { get; }
@@ -99,6 +73,22 @@ public class HttpError : Exception {
       ResponseHeaders = HttpUtils.Copy(response.Headers),
       Version = response.Version,
     };
+  }
+
+  private static string MessageFor(HttpStatusCode status, string? reason, Version? version, string? message) {
+    if (message is not null) {
+      return message;
+    }
+    var sb = new StringBuilder();
+    sb.Append("HTTP");
+    if (version is not null) {
+      sb.Append('/').Append(version);
+    }
+    sb.Append(' ').Append((int) status).Append(" (").Append(status).Append(')');
+    if (reason is not null) {
+      sb.Append(" '").Append(reason).Append('\'');
+    }
+    return sb.ToString();
   }
 
 }

@@ -38,10 +38,6 @@ public class HttpError : System.Exception {
     public get;
   }
 
-  string Message {
-    public override get;
-  }
-
   string? Reason {
     public get;
   }
@@ -66,12 +62,7 @@ public class HttpError : System.Exception {
     public get;
   }
 
-  [System.ObsoleteAttribute("Use FromResponse or FromResponseAsync instead.")]
-  public HttpError(System.Net.Http.HttpResponseMessage response);
-
-  public HttpError(System.Net.HttpStatusCode status, string? reason, System.Exception? cause = null);
-
-  public HttpError(System.Net.HttpStatusCode status, string? reason, System.Version version, System.Exception? cause = null);
+  public HttpError(System.Net.HttpStatusCode status, string? reason = null, System.Version? version = null, string? message = null, System.Exception? cause = null);
 
   public static HttpError FromResponse(System.Net.Http.HttpResponseMessage response);
 
