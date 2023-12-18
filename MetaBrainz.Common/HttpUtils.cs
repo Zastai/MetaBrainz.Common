@@ -1,6 +1,4 @@
-﻿#define TRACE
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
