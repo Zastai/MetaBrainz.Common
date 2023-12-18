@@ -38,11 +38,15 @@ public class HttpError : System.Exception {
     public get;
   }
 
-  string Message {
-    public override get;
+  string? Reason {
+    public get;
   }
 
-  string? Reason {
+  System.Net.Http.Headers.HttpRequestHeaders? RequestHeaders {
+    public get;
+  }
+
+  System.Uri? RequestUri {
     public get;
   }
 
@@ -58,12 +62,7 @@ public class HttpError : System.Exception {
     public get;
   }
 
-  [System.ObsoleteAttribute("Use FromResponse or FromResponseAsync instead.")]
-  public HttpError(System.Net.Http.HttpResponseMessage response);
-
-  public HttpError(System.Net.HttpStatusCode status, string? reason, System.Exception? cause = null);
-
-  public HttpError(System.Net.HttpStatusCode status, string? reason, System.Version version, System.Exception? cause = null);
+  public HttpError(System.Net.HttpStatusCode status, string? reason = null, System.Version? version = null, string? message = null, System.Exception? cause = null);
 
   public static HttpError FromResponse(System.Net.Http.HttpResponseMessage response);
 
@@ -80,6 +79,15 @@ public static class HttpUtils {
   public static readonly System.Diagnostics.TraceSource TraceSource;
 
   public const string UnknownAssemblyName = "*Unknown Assembly*";
+
+  [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute("headers")]
+  public static System.Net.Http.Headers.HttpContentHeaders? Copy(System.Net.Http.Headers.HttpContentHeaders? headers);
+
+  [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute("headers")]
+  public static System.Net.Http.Headers.HttpRequestHeaders? Copy(System.Net.Http.Headers.HttpRequestHeaders? headers);
+
+  [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute("headers")]
+  public static System.Net.Http.Headers.HttpResponseHeaders? Copy(System.Net.Http.Headers.HttpResponseHeaders? headers);
 
   public static System.Net.Http.Headers.ProductInfoHeaderValue CreateUserAgentHeader<T>();
 

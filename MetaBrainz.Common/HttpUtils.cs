@@ -1,7 +1,6 @@
-﻿#define TRACE
-
-using System;
+﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -17,6 +16,54 @@ namespace MetaBrainz.Common;
 /// <summary>Utility methods related to HTTP processing.</summary>
 [PublicAPI]
 public static class HttpUtils {
+
+  /// <summary>Creates a copy of a set of HTTP content headers.</summary>
+  /// <param name="headers">The headers to copy.</param>
+  /// <returns>A new set of HTTP content headers, with the same contents as the set provided.</returns>
+  [return: NotNullIfNotNull(nameof(headers))]
+  public static HttpContentHeaders? Copy(HttpContentHeaders? headers) {
+    if (headers is null) {
+      return null;
+    }
+    // There is no way to construct a copy of HTTP headers directly at the moment (see dotnet/runtime#95912).
+    using var dummy = new ByteArrayContent(Array.Empty<byte>());
+    HttpUtils.Copy(headers, dummy.Headers);
+    return dummy.Headers;
+  }
+
+  private static void Copy(HttpHeaders from, HttpHeaders to) {
+    foreach (var (name, values) in from.NonValidated) {
+      to.TryAddWithoutValidation(name, values);
+    }
+  }
+
+  /// <summary>Creates a copy of a set of HTTP request headers.</summary>
+  /// <param name="headers">The headers to copy.</param>
+  /// <returns>A new set of HTTP request headers, with the same contents as the set provided.</returns>
+  [return: NotNullIfNotNull(nameof(headers))]
+  public static HttpRequestHeaders? Copy(HttpRequestHeaders? headers) {
+    if (headers is null) {
+      return null;
+    }
+    // There is no way to construct a copy of HTTP headers directly at the moment (see dotnet/runtime#95912).
+    using var dummy = new HttpRequestMessage();
+    HttpUtils.Copy(headers, dummy.Headers);
+    return dummy.Headers;
+  }
+
+  /// <summary>Creates a copy of a set of HTTP response headers.</summary>
+  /// <param name="headers">The headers to copy.</param>
+  /// <returns>A new set of HTTP response headers, with the same contents as the set provided.</returns>
+  [return: NotNullIfNotNull(nameof(headers))]
+  public static HttpResponseHeaders? Copy(HttpResponseHeaders? headers) {
+    if (headers is null) {
+      return null;
+    }
+    // There is no way to construct a copy of HTTP headers directly at the moment (see dotnet/runtime#95912).
+    using var dummy = new HttpResponseMessage();
+    HttpUtils.Copy(headers, dummy.Headers);
+    return dummy.Headers;
+  }
 
   /// <summary>Create a user agent header containing the name and version of the assembly containing a particular type.</summary>
   /// <typeparam name="T">The type to use to determine the assembly name and version.</typeparam>
