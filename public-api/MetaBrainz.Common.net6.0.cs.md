@@ -81,6 +81,15 @@ public static class HttpUtils {
 
   public const string UnknownAssemblyName = "*Unknown Assembly*";
 
+  [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute("headers")]
+  public static System.Net.Http.Headers.HttpContentHeaders? Copy(System.Net.Http.Headers.HttpContentHeaders? headers);
+
+  [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute("headers")]
+  public static System.Net.Http.Headers.HttpRequestHeaders? Copy(System.Net.Http.Headers.HttpRequestHeaders? headers);
+
+  [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute("headers")]
+  public static System.Net.Http.Headers.HttpResponseHeaders? Copy(System.Net.Http.Headers.HttpResponseHeaders? headers);
+
   public static System.Net.Http.Headers.ProductInfoHeaderValue CreateUserAgentHeader<T>();
 
   public static System.Net.Http.HttpResponseMessage EnsureSuccessful(this System.Net.Http.HttpResponseMessage response);

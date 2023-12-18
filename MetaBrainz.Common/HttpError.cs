@@ -85,12 +85,10 @@ public class HttpError : Exception {
   /// <returns>A new HTTP error containing information taken from the response message.</returns>
   public static async Task<HttpError> FromResponseAsync(HttpResponseMessage response,
                                                         CancellationToken cancellationToken = default) {
-    // It's unfortunate that the headers are not easily copied (the classes do not have public constructors), so any changes to the
-    // response after this method is called will be reflected in the error's properties.
     return new HttpError(response.StatusCode, response.ReasonPhrase) {
       Content = await response.GetStringContentAsync(cancellationToken),
-      ContentHeaders = response.Content.Headers,
-      ResponseHeaders = response.Headers,
+      ContentHeaders = HttpUtils.Copy(response.Content.Headers),
+      ResponseHeaders = HttpUtils.Copy(response.Headers),
       Version = response.Version,
     };
   }
