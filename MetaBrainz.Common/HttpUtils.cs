@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -26,7 +25,7 @@ public static class HttpUtils {
       return null;
     }
     // There is no way to construct a copy of HTTP headers directly at the moment (see dotnet/runtime#95912).
-    using var dummy = new ByteArrayContent(Array.Empty<byte>());
+    using var dummy = new ByteArrayContent([]);
     HttpUtils.Copy(headers, dummy.Headers);
     return dummy.Headers;
   }
@@ -78,13 +77,6 @@ public static class HttpUtils {
 
   /// <summary>Checks a response to ensure it was successful.</summary>
   /// <param name="response">The response whose status should be checked.</param>
-  /// <returns><paramref name="response"/>.</returns>
-  /// <exception cref="HttpError">When the response did not have a successful status.</exception>
-  public static HttpResponseMessage EnsureSuccessful(this HttpResponseMessage response)
-    => AsyncUtils.ResultOf(response.EnsureSuccessfulAsync());
-
-  /// <summary>Checks a response to ensure it was successful.</summary>
-  /// <param name="response">The response whose status should be checked.</param>
   /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
   /// <returns><paramref name="response"/>.</returns>
   /// <exception cref="HttpError">When the response did not have a successful status.</exception>
@@ -118,12 +110,6 @@ public static class HttpUtils {
 
   /// <summary>Gets the content of an HTTP response as a string.</summary>
   /// <param name="response">The response to process.</param>
-  /// <returns>The content of <paramref name="response"/> as a string.</returns>
-  public static string GetStringContent(this HttpResponseMessage response)
-    => AsyncUtils.ResultOf(response.GetStringContentAsync());
-
-  /// <summary>Gets the content of an HTTP response as a string.</summary>
-  /// <param name="response">The response to process.</param>
   /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
   /// <returns>The content of <paramref name="response"/> as a string.</returns>
   public static async Task<string> GetStringContentAsync(this HttpResponseMessage response,
@@ -135,11 +121,7 @@ public static class HttpUtils {
     var stream = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
     await using var _ = stream.ConfigureAwait(false);
     using var sr = new StreamReader(stream, Encoding.GetEncoding(headers.GetContentEncoding()), false, 1024, true);
-#if NET6_0
-    var text = await sr.ReadToEndAsync().ConfigureAwait(false);
-#else
     var text = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-#endif
     if (HttpUtils.TraceSource.Switch.ShouldTrace(TraceEventType.Verbose)) {
       HttpUtils.TraceSource.TraceEvent(TraceEventType.Verbose, 2, "RESPONSE TEXT: {0}", TextUtils.FormatMultiLine(text));
     }

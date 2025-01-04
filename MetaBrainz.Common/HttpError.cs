@@ -54,12 +54,7 @@ public class HttpError : Exception {
   /// <summary>The HTTP message version from the error response, if available.</summary>
   public Version? Version { get; private init; }
 
-  /// <summary>Creates a new HTTP error based on an response message.</summary>
-  /// <param name="response">The response.</param>
-  /// <returns>A new HTTP error containing information taken from the response message.</returns>
-  public static HttpError FromResponse(HttpResponseMessage response) => AsyncUtils.ResultOf(HttpError.FromResponseAsync(response));
-
-  /// <summary>Creates a new HTTP error based on an response message.</summary>
+  /// <summary>Creates a new HTTP error based on a response message.</summary>
   /// <param name="response">The response message that triggered the error.</param>
   /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
   /// <returns>A new HTTP error containing information taken from the response message.</returns>

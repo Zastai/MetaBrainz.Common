@@ -9,22 +9,6 @@
 
 ## Namespace: MetaBrainz.Common
 
-### Type: AsyncUtils
-
-```cs
-public static class AsyncUtils {
-
-  public static void ResultOf(System.Threading.Tasks.Task task);
-
-  public static void ResultOf(System.Threading.Tasks.ValueTask task);
-
-  public static T ResultOf<T>(System.Threading.Tasks.Task<T> task);
-
-  public static T ResultOf<T>(System.Threading.Tasks.ValueTask<T> task);
-
-}
-```
-
 ### Type: HttpError
 
 ```cs
@@ -64,8 +48,6 @@ public class HttpError : System.Exception {
 
   public HttpError(System.Net.HttpStatusCode status, string? reason = null, System.Version? version = null, string? message = null, System.Exception? cause = null);
 
-  public static HttpError FromResponse(System.Net.Http.HttpResponseMessage response);
-
   public static System.Threading.Tasks.Task<HttpError> FromResponseAsync(System.Net.Http.HttpResponseMessage response, System.Threading.CancellationToken cancellationToken = default);
 
 }
@@ -91,13 +73,9 @@ public static class HttpUtils {
 
   public static System.Net.Http.Headers.ProductInfoHeaderValue CreateUserAgentHeader<T>();
 
-  public static System.Net.Http.HttpResponseMessage EnsureSuccessful(this System.Net.Http.HttpResponseMessage response);
-
   public static System.Threading.Tasks.ValueTask<System.Net.Http.HttpResponseMessage> EnsureSuccessfulAsync(this System.Net.Http.HttpResponseMessage response, System.Threading.CancellationToken cancellationToken = default);
 
   public static string GetContentEncoding(this System.Net.Http.Headers.HttpContentHeaders contentHeaders);
-
-  public static string GetStringContent(this System.Net.Http.HttpResponseMessage response);
 
   public static System.Threading.Tasks.Task<string> GetStringContentAsync(this System.Net.Http.HttpResponseMessage response, System.Threading.CancellationToken cancellationToken = default);
 
