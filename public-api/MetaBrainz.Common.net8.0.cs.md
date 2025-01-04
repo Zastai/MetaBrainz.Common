@@ -117,34 +117,7 @@ public readonly struct RateLimitInfo {
 ```cs
 public static class TextUtils {
 
-  [System.ObsoleteAttribute("Call Encoding.UTF8.GetString() instead.")]
-  public static string DecodeUtf8(System.ReadOnlySpan<byte> bytes);
-
   public static string FormatMultiLine(string text, string prefix = "<<", string suffix = ">>", string separator = "\n  ");
-
-}
-```
-
-### Type: UnixTime
-
-```cs
-[System.ObsoleteAttribute("Use DateTimeOffset instead.")]
-public static class UnixTime {
-
-  [System.ObsoleteAttribute("Use DateTimeOffset.UnixEpoch instead.")]
-  public static readonly System.DateTimeOffset Epoch;
-
-  [System.ObsoleteAttribute("Use DateTimeOffset.ToUnixTimeSeconds instead.")]
-  public static long Convert(System.DateTimeOffset value);
-
-  [System.ObsoleteAttribute("Use DateTimeOffset.ToUnixTimeSeconds instead.")]
-  public static long? Convert(System.DateTimeOffset? value);
-
-  [System.ObsoleteAttribute("Use DateTimeOffset.FromUnixTimeSeconds instead.")]
-  public static System.DateTimeOffset Convert(long value);
-
-  [System.ObsoleteAttribute("Use DateTimeOffset.FromUnixTimeSeconds instead.")]
-  public static System.DateTimeOffset? Convert(long? value);
 
 }
 ```
