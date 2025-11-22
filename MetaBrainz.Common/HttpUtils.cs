@@ -1,12 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
@@ -14,7 +9,7 @@ namespace MetaBrainz.Common;
 
 /// <summary>Utility methods related to HTTP processing.</summary>
 [PublicAPI]
-public static class HttpUtils {
+public static partial class HttpUtils {
 
   /// <summary>Creates a copy of a set of HTTP content headers.</summary>
   /// <param name="headers">The headers to copy.</param>
@@ -73,59 +68,6 @@ public static class HttpUtils {
   public static ProductInfoHeaderValue CreateUserAgentHeader<T>() {
     var an = typeof(T).Assembly.GetName();
     return new ProductInfoHeaderValue(an.Name ?? HttpUtils.UnknownAssemblyName, an.Version?.ToString());
-  }
-
-  /// <summary>Checks a response to ensure it was successful.</summary>
-  /// <param name="response">The response whose status should be checked.</param>
-  /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-  /// <returns><paramref name="response"/>.</returns>
-  /// <exception cref="HttpError">When the response did not have a successful status.</exception>
-  public static async ValueTask<HttpResponseMessage> EnsureSuccessfulAsync(this HttpResponseMessage response,
-                                                                           CancellationToken cancellationToken = new()) {
-    if (response.IsSuccessStatusCode) {
-      return response;
-    }
-    throw await HttpError.FromResponseAsync(response, cancellationToken);
-  }
-
-  /// <summary>Gets the content encoding based on content headers.</summary>
-  /// <param name="contentHeaders">The headers to get the information from.</param>
-  /// <returns>
-  /// The content encoding extracted from the headers (first from the <c>Content-Encoding</c> header, then from a <c>charset</c>
-  /// specification as part of the <c>Content-Type</c> header), mapped to lower case; uses "utf-8" as fallback if no explicit
-  /// specification was found.
-  /// </returns>
-  public static string GetContentEncoding(this HttpContentHeaders contentHeaders) {
-    var characterSet = contentHeaders.ContentEncoding.FirstOrDefault();
-    if (string.IsNullOrWhiteSpace(characterSet)) {
-      // Fall back on the charset portion of the content type.
-      // FIXME: Should this check the media type?
-      characterSet = contentHeaders.ContentType?.CharSet;
-    }
-    if (string.IsNullOrWhiteSpace(characterSet)) {
-      characterSet = null;
-    }
-    return characterSet?.ToLowerInvariant() ?? "utf-8";
-  }
-
-  /// <summary>Gets the content of an HTTP response as a string.</summary>
-  /// <param name="response">The response to process.</param>
-  /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-  /// <returns>The content of <paramref name="response"/> as a string.</returns>
-  public static async Task<string> GetStringContentAsync(this HttpResponseMessage response,
-                                                         CancellationToken cancellationToken = new()) {
-    var content = response.Content;
-    var headers = content.Headers;
-    HttpUtils.TraceSource.TraceEvent(TraceEventType.Verbose, 1, "RESPONSE ({0}): {1} bytes", headers.ContentType,
-                                     headers.ContentLength);
-    var stream = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-    await using var _ = stream.ConfigureAwait(false);
-    using var sr = new StreamReader(stream, Encoding.GetEncoding(headers.GetContentEncoding()), false, 1024, true);
-    var text = await sr.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
-    if (HttpUtils.TraceSource.Switch.ShouldTrace(TraceEventType.Verbose)) {
-      HttpUtils.TraceSource.TraceEvent(TraceEventType.Verbose, 2, "RESPONSE TEXT: {0}", TextUtils.FormatMultiLine(text));
-    }
-    return text;
   }
 
   /// <summary>The trace source (named 'MetaBrainz.Common.HttpUtils') used by this class.</summary>
