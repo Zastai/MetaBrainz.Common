@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <Sdk Name="MetaBrainz.Build.Sdk" Version="4.1.0" />
+  <Sdk Name="MetaBrainz.Build.Sdk" Version="4.1.1" />
 
   <PropertyGroup>
     <Authors>Zastai</Authors>
     <Title>Common Utilities</Title>
     <Description>This package provides general utility classes used by other MetaBrainz packages.</Description>
     <PackageCopyrightOwners>Tim Van Holder</PackageCopyrightOwners>
-    <PackageCopyrightYears>2022, 2023, 2025</PackageCopyrightYears>
+    <PackageCopyrightYears>2022, 2023, 2025, 2026</PackageCopyrightYears>
     <PackageRepositoryName>MetaBrainz.Common</PackageRepositoryName>
     <PackageTags>MetaBrainz</PackageTags>
     <Version>4.1.1-pre</Version>
